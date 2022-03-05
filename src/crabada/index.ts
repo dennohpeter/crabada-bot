@@ -1,2 +1,2 @@
-export * from './crabada';
+export * from './teams';
 export * from './tarven';
