@@ -1,0 +1,19 @@
+{
+  "name": "crabada_mining_bot",
+  "version": "1.0.0",
+  "description": "A crabada bot that does mining at play.crabada.com with minimal user intervation",
+  "main": "src/index.ts",
+  "repository": "git@github.com:JoshuaGX/carbada_mining_bot.git",
+  "author": "Joshua JX <dev@ninjadevllc.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "ts-node-dev src/index.ts"
+  },
+  "dependencies": {
+    "@types/node": "^17.0.21",
+    "axios": "^0.26.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.6.2"
+  }
+}
