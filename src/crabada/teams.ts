@@ -48,3 +48,23 @@ export const createTeam = async () => {};
 export const withdrawTeam = async () => {};
 
 export const transferCrabadaFromInvetory = async () => {};
+
+export const canJoinTeam = async (params: { user_address: string }) => {
+  try {
+    let { data } = await config.idle({
+      url: 'teams',
+      method: 'GET',
+      params,
+    });
+
+    if (!data?.error_code) {
+      let { data: status, totalRecord, totalPages, page } = data?.result;
+    } else {
+      console.error(`Error:`, data?.error_code, data?.message);
+      throw new Error(data?.message);
+    }
+  } catch (error) {
+    console.log(`Error:`, error);
+    throw new Error(error);
+  }
+};
