@@ -1,10 +1,18 @@
-import axios from 'axios';
-
 export const config = {
-  idle: axios.create({
-    baseURL: 'https://idle-api.crabada.com/public/idle/crabadas/',
-  }),
-  api: axios.create({
-    baseURL: 'https://api.crabada.com/public/crabadas/',
-  }),
+  /**
+   * Enviroment
+   * @options `true` for test mode and
+   * `false` for live mode
+   */
+  TEST_MODE: true,
+
+  /*
+   * Reinforcement Filters
+   */
+  filters: {
+    maxPrice: 10, // max price in TUS
+    minPrice: 0, // min price in TUS
+    mine_point: true, //sort by highest MP?
+    battle_point: true, // tiebreak based on BP?
+  },
 };
