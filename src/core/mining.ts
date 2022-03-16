@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
-import { Crabada } from '../types';
+import { Crabada, Mine, Team } from '../types';
 import { config } from '../../config';
-import { displayTable } from '../utils';
 
 /**
  * A Wrapper that contains all the necessary functions for interacting
@@ -43,14 +42,14 @@ class MiningWrapper {
    * @param params.is_team_available - team availability `1` or `0`. `1` -
    * @returns Array of teams found `Team[]`
    */
-  fetchMyTeams = async (params: {
+  fetchTeams = async (params: {
     orderBy?: string;
     order?: string;
-    page: string;
+    page: number;
     limit: number;
     user_address: string;
     is_team_available?: number;
-  }) => {
+  }): Promise<Team[]> => {
     return this._fetch('/teams', params);
   };
   /**
@@ -65,7 +64,7 @@ class MiningWrapper {
    */
   fetchMiningExpeditions = async (params: {
     user_address?: string;
-    page?: string;
+    page: number;
     limit?: number;
     status?: string;
     can_loot?: boolean;
@@ -88,7 +87,7 @@ class MiningWrapper {
   fetchLendings = async (params: {
     orderBy?: string;
     order?: string;
-    page?: string;
+    page: number;
     limit?: number;
     class_ids?: any;
     is_origin?: any;
@@ -99,15 +98,53 @@ class MiningWrapper {
     return this._fetch('/crabadas/lending', params);
   };
 
-  _fetch = async (url: string, params) => {
-    let records = [];
+  /**
+   * Fetches lendings from tarven
+   * @param params.orderBy - Field to order by
+   * @param params.order - sort direction
+   * @param params.page - page to start on
+   * @param params.limit - lendings per page
+   * @param params.class_ids -  list of crabadas class ids
+   * @param params.is_origin - whether crabada is origin
+   * @param params.origin - crabada origin
+   *
+   * @returns
+   */
+  fetchMines = async (params: {
+    user_address: string;
+    status: string;
+    page: number;
+    limit?: number;
+  }): Promise<Mine[]> => {
+    return this._fetch('/mines', params);
+  };
+
+  _fetch = async (
+    url: string,
+    params: {
+      orderBy?: string | undefined;
+      order?: string | undefined;
+      page: number;
+      limit?: number | undefined;
+      user_address?: string | undefined;
+      is_team_available?: number | undefined;
+      status?: string | undefined;
+      can_loot?: boolean | undefined;
+      class_ids?: any;
+      is_origin?: any;
+      origin?: any;
+      from_price?: number | undefined;
+      to_price?: number | undefined;
+    }
+  ) => {
+    let records: any = [];
     let currentPage = params.page;
     while (true) {
       try {
-        console.log(
-          `Fetching ${url.substring(url.lastIndexOf('/') + 1)} on page`,
-          currentPage
-        );
+        // console.log(
+        //   `Fetching ${url.substring(url.lastIndexOf('/') + 1)} on page`,
+        //   currentPage
+        // );
         let { data } = await this._instance({
           url,
           method: 'GET',
@@ -127,16 +164,16 @@ class MiningWrapper {
           console.error(`Error:`, data?.error_code, data?.message);
           break;
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error(`Error:`, error);
         throw new Error(error);
       }
     }
     records = records.filter(Boolean);
-    console.log({
-      totalRecords: records.length,
-      // records,
-    });
+    // console.log({
+    //   totalRecords: records.length,
+    //   // records,
+    // });
 
     return records;
   };
@@ -158,8 +195,7 @@ class MiningWrapper {
     // from highest to lowest
     matches = matches.sort(
       (l1, l2) =>
-        (config.filters.mine_point && l2.mine_point - l1.mine_point) ||
-        (config.filters.battle_point && l2.battle_point - l1.battle_point)
+        l2.mine_point - l1.mine_point || l2.battle_point - l1.battle_point
     );
     console.log({
       size: matches.length,
@@ -167,7 +203,6 @@ class MiningWrapper {
       min_price,
     });
 
-    displayTable(matches);
     return matches.slice(0, 1);
   };
 }

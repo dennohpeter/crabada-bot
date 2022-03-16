@@ -15,7 +15,9 @@
     "@types/node-cron": "^3.0.1",
     "axios": "^0.26.0",
     "chalk-table": "^1.0.2",
-    "ethers": "^5.6.0",
+    "dotenv": "^16.0.0",
+    "ethers": "^5.6.1",
+    "moment": "^2.29.1",
     "node-cron": "^3.0.0",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.6.2"

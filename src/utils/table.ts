@@ -4,24 +4,41 @@ import chalk from 'chalk';
 // tslint:disable:no-var-requires
 const chalkTable = require('chalk-table');
 
-export const displayTable = (data: Crabada[], start = 0, limit = 10000) => {
+const team_options = [
+  { field: '#', name: chalk.cyan('#') },
+  { field: 'team_id', name: chalk.cyan('ID') },
+  { field: 'status', name: chalk.cyan('status') },
+  { field: 'faction', name: chalk.cyan('faction') },
+  { field: 'time_point', name: chalk.bgMagenta('TP') },
+  { field: 'battle_point', name: chalk.bgMagenta('BP') },
+  { field: 'mine_point', name: chalk.yellow('MP') },
+];
+
+const crab_options = [
+  { field: '#', name: chalk.cyan('#') },
+  { field: 'id', name: chalk.cyan('ID') },
+  { field: 'crabada_name', name: chalk.magenta('Name 🦀') },
+  { field: 'class_name', name: chalk.green('Class') },
+  { field: 'display_price', name: chalk.green('Price in TUS 🪙') },
+  { field: 'speed', name: chalk.yellow('Speed ⚡️') },
+  { field: 'damage', name: chalk.yellow('Damage') },
+  { field: 'critical', name: chalk.yellow('Critical') },
+  { field: 'armor', name: chalk.cyan('Armor') },
+  { field: 'hp', name: chalk.yellow('HP') },
+  { field: 'time_point', name: chalk.yellow('TP') },
+  { field: 'battle_point', name: chalk.bgMagenta('BP') },
+  { field: 'mine_point', name: chalk.yellow('MP') },
+];
+
+export const displayTable = (
+  data: Crabada[],
+  type: 'team' | 'crabs' = 'crabs',
+  start = 0,
+  limit = 10000
+) => {
   const options = {
-    leftPad: 2,
-    columns: [
-      { field: '#', name: chalk.cyan('#') },
-      { field: 'id', name: chalk.cyan('ID') },
-      { field: 'crabada_name', name: chalk.magenta('Name 🦀') },
-      { field: 'class_name', name: chalk.green('Class') },
-      { field: 'display_price', name: chalk.green('Price in TUS 🪙') },
-      { field: 'speed', name: chalk.yellow('Speed ⚡️') },
-      { field: 'damage', name: chalk.yellow('Damage') },
-      { field: 'critical', name: chalk.yellow('Critical') },
-      { field: 'armor', name: chalk.cyan('Armor') },
-      { field: 'hp', name: chalk.yellow('HP') },
-      { field: 'time_point', name: chalk.yellow('TP') },
-      { field: 'battle_point', name: chalk.bgMagenta('BP') },
-      { field: 'mine_point', name: chalk.yellow('MP') },
-    ],
+    leftPad: 0,
+    columns: type == 'team' ? team_options : crab_options,
     skinny: true,
   };
 
@@ -59,5 +76,5 @@ export const displayTable = (data: Crabada[], start = 0, limit = 10000) => {
     },
   ]);
 
-  console.log(footer);
+  // console.log(footer);
 };
