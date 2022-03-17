@@ -114,10 +114,7 @@ const Main = async () => {
         console.log(`Start Time:`, formatDate(mine_start_time));
         console.log(`End Time:`, formatDate(mine_end_time));
         if (timeLeft > 0) {
-          console.log(
-            `${game_round == 1 ? 'Round' : 'Game'} Ends:`,
-            moment(mine_end_time * 1_000).fromNow()
-          );
+          console.log(`Game Ends:`, moment(mine_end_time * 1_000).fromNow());
         }
         console.log(`Faction:`, faction);
         console.log(
