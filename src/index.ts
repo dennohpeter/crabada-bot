@@ -16,7 +16,7 @@ import { config } from '../config';
  * Entry point
  */
 const Main = async () => {
-  const user_address = '0xb6d48251389644de50736a80f87d8e7ce57f00be';
+  const user_address = config.PUBLIC_KEY;
   const CHECK_INTERVAL = 10;
 
   schedule(`*/${CHECK_INTERVAL * 3} * * * * *`, async () => {

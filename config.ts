@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
-if (!process.env.PRIVATE_KEY) {
-  throw new Error('PRIVATE_KEY Must be in your .env file.');
+if (!process.env.PRIVATE_KEY && !process.env.PUBLIC_KEY) {
+  throw new Error('PRIVATE_KEY && PUBLIC_KEY, Must be in your .env file.');
 }
 
 export const config = {
@@ -9,6 +9,7 @@ export const config = {
    * WALLET
    */
   PRIVATE_KEY: process.env.PRIVATE_KEY!,
+  PUBLIC_KEY: process.env.PUBLIC_KEY!,
 
   /*
    * Reinforcement Filters

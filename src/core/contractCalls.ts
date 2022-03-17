@@ -2,10 +2,19 @@ import { BigNumber, Contract, providers, utils, Wallet } from 'ethers';
 import { config } from '../../config';
 import IdleGameBI from './abis//IdleGame.json';
 
-const provider = new providers.JsonRpcProvider(config.TESTNET_JSON_RPC_URL, {
-  chainId: config.TESTNET_CHAIN_ID,
-  name: 'Swimmers Network',
-});
+const provider = new providers.JsonRpcProvider(
+  config.TEST_MODE ? config.TESTNET_JSON_RPC_URL : config.MAINNET_JSON_RPC_URL,
+  config.TEST_MODE
+    ? {
+        chainId: config.TESTNET_CHAIN_ID,
+        name: 'Swimmers Network',
+      }
+    : {
+        chainId: config.MAINNET_CHAIN_ID,
+        name: 'Availanche C Mainnet',
+      }
+);
+
 const signer = new Wallet(config.PRIVATE_KEY, provider);
 
 const idleGameInterface = new utils.Interface(IdleGameBI);
