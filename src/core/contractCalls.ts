@@ -10,7 +10,7 @@ const signer = new Wallet(config.PRIVATE_KEY, provider);
 
 const idleGameInterface = new utils.Interface(IdleGameBI);
 const idleGameContract = new Contract(
-  config.IdleGame,
+  config.IdleGame_TESTNET,
   idleGameInterface,
   signer
 );

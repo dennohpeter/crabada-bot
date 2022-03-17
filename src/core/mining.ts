@@ -203,7 +203,7 @@ class MiningWrapper {
       min_price,
     });
 
-    return matches.slice(0, 1);
+    return matches.slice(0, 10);
   };
 }
 

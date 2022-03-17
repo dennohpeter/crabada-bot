@@ -10,6 +10,7 @@ import { schedule } from 'node-cron';
 import moment from 'moment';
 import { Process } from './types';
 import { utils } from 'ethers';
+import { config } from '../config';
 
 /**
  * Entry point
@@ -108,7 +109,7 @@ const Main = async () => {
         const timeLeft = mine_end_time - Math.floor(Date.now() / 1_000);
 
         console.log(`Team Name:`, `Team ${team_id}`);
-        console.log(`Game Id:`, game_id);
+        console.log(`Mine Id:`, game_id);
         console.log(`Team Id:`, team_id);
         console.log(`Start Time:`, formatDate(mine_start_time));
         console.log(`End Time:`, formatDate(mine_end_time));
@@ -124,7 +125,7 @@ const Main = async () => {
           levels?.map((level: Process) => {
             return {
               level: `${level.action.replace('-', ' ')}`,
-              startedAt: `${formatDate(level.transaction_time)} ✔️`,
+              startedAt: formatDate(level.transaction_time),
             };
           })
         );
@@ -134,7 +135,7 @@ const Main = async () => {
           `Game Status:`,
           winner_team_id
             ? winner_team_id == team_id
-              ? 'We Won 🎉🎉🎊'
+              ? 'We Won 🎉🎉🎊. Waiting to settle...'
               : 'We Lost 😔😔'
             : timeLeft > 0
             ? 'Active'
@@ -144,12 +145,17 @@ const Main = async () => {
 
         if (timeLeft > 0) {
           if (
-            level.action === 'attack' ||
-            (level.action === 'reinforce-attack' &&
-              levels.reduce(
-                (acc, l2) => (l2.action == 'reinforce-attack' ? acc++ : acc),
-                0
-              ) <= 2) // FIXED check to ensure that we go upto 2 reinforcements
+            (level.action === 'attack' ||
+              (level.action === 'reinforce-attack' &&
+                levels.reduce(
+                  (acc, l2) =>
+                    l2.action == 'attack' || l2.action == 'reinforce-attack'
+                      ? acc++
+                      : acc,
+                  0
+                ) < 2)) && // FIXED check to ensure that we go upto 2 reinforcements
+            Math.floor(Date.now() / 1_000) - level.transaction_time >=
+              config.DELAY_B4_REINFORCEMENT_IN_MIN * 60
           ) {
             // 5 Get reinforcements from tarven
             const lendings = await miningWrapper.fetchLendings({
@@ -162,11 +168,10 @@ const Main = async () => {
               origin: undefined,
             });
             // 6 Select the best reinforcement according to the user filter criteria
-            const [best_mercenary] = await miningWrapper.getBestMercenary(
-              lendings
-            );
+            const mercenaries = await miningWrapper.getBestMercenary(lendings);
+            const best_mercenary = mercenaries[0];
             console.info(`Best mercenary crabada selected:`);
-            displayTable([best_mercenary]);
+            displayTable(mercenaries);
             console.log(`-----`.repeat(10));
 
             const game = game_manager.get(game_id);
@@ -175,7 +180,7 @@ const Main = async () => {
                 game_id,
               });
               console.info(
-                `Sending a reinforcement mercenary to Team ${game_id}...`
+                `Sending a reinforcement mercenary ${best_mercenary.crabada_id} to Mine ${game_id}...`
               );
               await reinforceDefense(
                 game_id,
@@ -191,7 +196,7 @@ const Main = async () => {
                     //  remove game track list
                     game_manager.delete(game_id);
                     console.info(
-                      `Mercenary ${best_mercenary.id} has been deployed successfully to Team ${team_id} ✔️`
+                      `Mercenary ${best_mercenary.id} has been deployed successfully to  Mine ${game_id} ✔️`
                     );
                     console.log(`-----`.repeat(10));
                   }
@@ -199,7 +204,7 @@ const Main = async () => {
                 .catch((err) => {
                   console.log(`-----`.repeat(2));
                   console.error(
-                    `Error while deploying  mercenary ${best_mercenary.id}  to Team ${team_id}`,
+                    `Error while deploying  mercenary ${best_mercenary.id}  to Mine ${game_id}`,
                     err
                   );
                   //  remove game track list
@@ -212,7 +217,8 @@ const Main = async () => {
           // 7: claim rewards and end game
           const mine = game_manager.get(game_id);
           if (!mine) {
-            console.info(`New mine to claim rewards recorded  ✔️`);
+            console.info(`New mine ${game_id} to claim rewards recorded  ✔️`);
+            console.log(`-----`.repeat(2));
             game_manager.set(game_id, {
               levels,
               game_round,
@@ -224,49 +230,50 @@ const Main = async () => {
               winner_team_id,
             });
 
-            if (level.action?.toLowerCase() != 'settle') {
-              console.info(
-                `Claiming rewards for Game ID: ${game_id}, Team Name: Team ${team_id}`
-              );
-              await closeGame(game_id)
-                .then((tx: { hash: string }) => {
-                  const { hash } = tx;
-                  console.info(`Tx Hash:`, hash);
-                  if (hash) {
-                    console.log(`-----`.repeat(2));
-                    //  remove game track list
-                    game_manager.delete(game_id);
-                    console.log(`-----`.repeat(10));
-                  }
-                })
-                .catch((err: any) => {
+            // if (level.action?.toLowerCase() == 'settle') {
+            console.info(
+              `Claiming rewards for Mine ${game_id}, Team ${team_id}`
+            );
+            await closeGame(game_id)
+              .then((tx: { hash: string }) => {
+                const { hash } = tx;
+                console.log(`-----`.repeat(2));
+                console.info(`Tx Hash:`, hash);
+                if (hash) {
                   console.log(`-----`.repeat(2));
-                  console.error(`Error:`, err);
                   //  remove game track list
                   game_manager.delete(game_id);
-                });
-            } else {
-              console.info(
-                `Settling Game ID: ${game_id}, Team Name: Team ${team_id}`
-              );
-              await settleGame(game_id)
-                .then((tx: { hash: string }) => {
-                  const { hash } = tx;
-                  console.info(`Tx Hash:`, hash);
-                  if (hash) {
-                    console.log(`-----`.repeat(2));
-                    //  remove game track list
-                    game_manager.delete(game_id);
-                    console.log(`-----`.repeat(10));
-                  }
-                })
-                .catch((err: any) => {
-                  console.log(`-----`.repeat(2));
-                  console.error(`Error:`, err);
-                  //  remove game track list
-                  game_manager.delete(game_id);
-                });
-            }
+                  console.log(`-----`.repeat(10));
+                }
+              })
+              .catch((err: any) => {
+                console.log(`-----`.repeat(2));
+                console.error(`Error:`, err);
+                //  remove game track list
+                game_manager.delete(game_id);
+              });
+            // } else {
+            //   console.info(
+            //     `Settling Mine ${game_id}, Team Name: Team ${team_id}`
+            //   );
+            //   await settleGame(game_id)
+            //     .then((tx: { hash: string }) => {
+            //       const { hash } = tx;
+            //       console.info(`Tx Hash:`, hash);
+            //       if (hash) {
+            //         console.log(`-----`.repeat(2));
+            //         //  remove game track list
+            //         game_manager.delete(game_id);
+            //         console.log(`-----`.repeat(10));
+            //       }
+            //     })
+            //     .catch((err: any) => {
+            //       console.log(`-----`.repeat(2));
+            //       console.error(`Error:`, err);
+            //       //  remove game track list
+            //       game_manager.delete(game_id);
+            //     });
+            // }
           }
         }
       });
