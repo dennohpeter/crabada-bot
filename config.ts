@@ -34,10 +34,10 @@ export const config = {
   TESTNET_CHAIN_ID: 73771,
   TESTNET_EXPLORER: `https://testnet-explorer.swimmer.network`,
 
-  MAINNET_JSON_RPC_URL: `https://rpc.swimmer.network/ext/bc/2Sk6j8TYVQc2oR1TtUz64EWHAYjDUoDQ4hpbu6FMN2JBKC77xa/rpc`,
-  MAINNET_CHAIN_ID: 73771,
-  MAINNET_EXPLORER: `https://testnet-explorer.swimmer.network`,
+  MAINNET_JSON_RPC_URL: `https://api.avax.network/ext/bc/C/rpc`,
+  MAINNET_CHAIN_ID: 43113,
+  MAINNET_EXPLORER: `https://snowtrace.io`,
 
   IdleGame_TESTNET: '0x801b5bb19e9052db964b94ed5b4d6730d8fcca25',
-  IdleGame_MAINNET: '0x801b5bb19e9052db964b94ed5b4d6730d8fcca25',
+  IdleGame_MAINNET: '',
 };

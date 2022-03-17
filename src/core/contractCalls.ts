@@ -11,7 +11,7 @@ const provider = new providers.JsonRpcProvider(
       }
     : {
         chainId: config.MAINNET_CHAIN_ID,
-        name: 'Availanche C Mainnet',
+        name: 'Avalanche Mainnet C-Chain',
       }
 );
 
@@ -19,7 +19,7 @@ const signer = new Wallet(config.PRIVATE_KEY, provider);
 
 const idleGameInterface = new utils.Interface(IdleGameBI);
 const idleGameContract = new Contract(
-  config.IdleGame_TESTNET,
+  config.TEST_MODE ? config.IdleGame_TESTNET : config.IdleGame_MAINNET,
   idleGameInterface,
   signer
 );
