@@ -15,7 +15,7 @@ export const config = {
    * Reinforcement Filters
    */
   filters: {
-    maxPrice: 100, // max price in TUS
+    maxPrice: 20, // max price in TUS
     minPrice: 0, // min price in TUS
     mine_point: true, //sort by highest MP?
     battle_point: true, // tiebreak based on BP?
@@ -28,16 +28,16 @@ export const config = {
    * @options `true` for test mode and
    * `false` for live mode
    */
-  TEST_MODE: true,
+  TEST_MODE: false,
 
   TESTNET_JSON_RPC_URL: `https://testnet-rpc.swimmer.network/ext/bc/2Sk6j8TYVQc2oR1TtUz64EWHAYjDUoDQ4hpbu6FMN2JBKC77xa/rpc`,
   TESTNET_CHAIN_ID: 73771,
   TESTNET_EXPLORER: `https://testnet-explorer.swimmer.network`,
 
   MAINNET_JSON_RPC_URL: `https://api.avax.network/ext/bc/C/rpc`,
-  MAINNET_CHAIN_ID: 43113,
+  MAINNET_CHAIN_ID: 43114,
   MAINNET_EXPLORER: `https://snowtrace.io`,
 
   IdleGame_TESTNET: '0x801b5bb19e9052db964b94ed5b4d6730d8fcca25',
-  IdleGame_MAINNET: '',
+  IdleGame_MAINNET: '0x82a85407BD612f52577909F4A58bfC6873f14DA8',
 };
