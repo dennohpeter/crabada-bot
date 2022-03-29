@@ -33,14 +33,7 @@ const Main = async () => {
     if (teams.length) {
       // 2 Deploy free  team to a mining expedition
       teams.map(async (t) => {
-        const {
-          team_id,
-          battle_point,
-          faction,
-          process_status,
-          status,
-          time_point,
-        } = t;
+        const { team_id } = t;
 
         const team = game_manager.get(team_id);
         if (!team) {
@@ -58,19 +51,20 @@ const Main = async () => {
               console.info(`Tx Hash:`, hash);
               if (hash) {
                 console.log(`-----`.repeat(2));
-                //  remove game track list
-                game_manager.delete(team_id);
+
                 console.info(
                   `Team ${team_id} has been deployed successfully ✔️`
                 );
                 console.log(`-----`.repeat(10));
               }
+              //  remove game track list
+              game_manager.delete(team_id);
             })
             .catch((err) => {
               console.log(`-----`.repeat(2));
               console.error(`Error while deploying Team ${team_id}`, err);
               //  remove game track list
-              game_manager.delete(team);
+              game_manager.delete(team_id);
               console.log(`-----`.repeat(10));
             });
         }
@@ -147,7 +141,7 @@ const Main = async () => {
                 levels.reduce(
                   (acc, l2) =>
                     l2.action == 'attack' || l2.action == 'reinforce-attack'
-                      ? acc++
+                      ? (acc += 1)
                       : acc,
                   0
                 ) < 2)) && // FIXED check to ensure that we go upto 2 reinforcements
@@ -167,7 +161,9 @@ const Main = async () => {
             // 6 Select the best reinforcement according to the user filter criteria
             const mercenaries = await miningWrapper.getBestMercenary(lendings);
             const best_mercenary = mercenaries[0];
-            console.info(`Best mercenary crabada selected:`);
+            console.info(
+              `Best mercenaries found from tarven ranging from minPrice: ${config.filters.minPrice} to maxPrice: ${config.filters.maxPrice} TUS`
+            );
             displayTable(mercenaries);
             console.log(`-----`.repeat(10));
 
@@ -198,14 +194,17 @@ const Main = async () => {
                     console.log(`-----`.repeat(10));
                   }
                 })
-                .catch((err) => {
+                .catch((err: any) => {
                   console.log(`-----`.repeat(2));
+                  let message =
+                    JSON.parse(err?.error?.error?.body || {})?.error?.message ||
+                    err;
                   console.error(
                     `Error while deploying  mercenary ${best_mercenary.id}  to Mine ${game_id}`,
-                    err
+                    message
                   );
                   //  remove game track list
-                  game_manager.delete(game);
+                  game_manager.delete(game_id);
                   console.log(`-----`.repeat(10));
                 });
             }
