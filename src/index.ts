@@ -1,9 +1,10 @@
 import { displayTable, formatDate } from './utils';
 import {
+  approveTUS,
+  checkAllowance,
   closeGame,
   miningWrapper,
   reinforceDefense,
-  settleGame,
   startGame,
 } from './core';
 import { schedule } from 'node-cron';
@@ -144,7 +145,7 @@ const Main = async () => {
                       ? (acc += 1)
                       : acc,
                   0
-                ) < 2)) && // FIXED check to ensure that we go upto 2 reinforcements
+                ) < 3)) && // FIXED check to ensure that we go upto 2 reinforcements
             Math.floor(Date.now() / 1_000) - level.transaction_time >=
               config.DELAY_B4_REINFORCEMENT_IN_MIN * 60
           ) {
@@ -175,6 +176,14 @@ const Main = async () => {
               console.info(
                 `Sending a reinforcement mercenary ${best_mercenary.crabada_id} to Mine ${game_id}...`
               );
+              /// TODO Check TUS allowance
+              const allowance = await checkAllowance();
+
+              if (
+                allowance.lt(utils.parseUnits(`${best_mercenary.price}`, 0))
+              ) {
+                await approveTUS();
+              }
               await reinforceDefense(
                 game_id,
                 best_mercenary.crabada_id,
@@ -226,7 +235,6 @@ const Main = async () => {
               winner_team_id,
             });
 
-            // if (level.action?.toLowerCase() == 'settle') {
             console.info(
               `Claiming rewards for Mine ${game_id}, Team ${team_id}`
             );
@@ -237,10 +245,10 @@ const Main = async () => {
                 console.info(`Tx Hash:`, hash);
                 if (hash) {
                   console.log(`-----`.repeat(2));
-                  //  remove game track list
-                  game_manager.delete(game_id);
-                  console.log(`-----`.repeat(10));
                 }
+                //  remove game track list
+                game_manager.delete(game_id);
+                console.log(`-----`.repeat(10));
               })
               .catch((err: any) => {
                 console.log(`-----`.repeat(2));
@@ -248,28 +256,6 @@ const Main = async () => {
                 //  remove game track list
                 game_manager.delete(game_id);
               });
-            // } else {
-            //   console.info(
-            //     `Settling Mine ${game_id}, Team Name: Team ${team_id}`
-            //   );
-            //   await settleGame(game_id)
-            //     .then((tx: { hash: string }) => {
-            //       const { hash } = tx;
-            //       console.info(`Tx Hash:`, hash);
-            //       if (hash) {
-            //         console.log(`-----`.repeat(2));
-            //         //  remove game track list
-            //         game_manager.delete(game_id);
-            //         console.log(`-----`.repeat(10));
-            //       }
-            //     })
-            //     .catch((err: any) => {
-            //       console.log(`-----`.repeat(2));
-            //       console.error(`Error:`, err);
-            //       //  remove game track list
-            //       game_manager.delete(game_id);
-            //     });
-            // }
           }
         }
       });
