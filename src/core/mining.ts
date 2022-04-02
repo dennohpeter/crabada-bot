@@ -197,11 +197,11 @@ class MiningWrapper {
       (l1, l2) =>
         l2.mine_point - l1.mine_point || l2.battle_point - l1.battle_point
     );
-    console.log({
-      size: matches.length,
-      max_price,
-      min_price,
-    });
+    // console.log({
+    //   size: matches.length,
+    //   max_price,
+    //   min_price,
+    // });
 
     return matches.slice(0, 10);
   };

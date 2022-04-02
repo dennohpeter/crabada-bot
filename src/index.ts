@@ -18,9 +18,9 @@ import { config } from '../config';
  */
 const Main = async () => {
   const user_address = config.PUBLIC_KEY;
-  const CHECK_INTERVAL = 10;
+  const CHECK_INTERVAL = 15;
 
-  schedule(`*/${CHECK_INTERVAL * 3} * * * * *`, async () => {
+  schedule(`*/${CHECK_INTERVAL * 4} * * * * *`, async () => {
     // 1 Check for free teams
     console.log(`-----`.repeat(10));
     console.info(`Checking for free teams....`);
@@ -77,7 +77,7 @@ const Main = async () => {
     }
   });
   const game_manager: Map<number, any> = new Map();
-  schedule(`*/${CHECK_INTERVAL * 4} * * * * *`, async () => {
+  schedule(`*/${CHECK_INTERVAL * 3} * * * * *`, async () => {
     // 4 Monitor active for attacks
     console.log(`-----`.repeat(10));
     console.info(`Checking for active mines....`);
@@ -122,7 +122,9 @@ const Main = async () => {
           })
         );
         console.log(`Game Round:`, game_round);
-        console.log(`Winner Team Id:`, winner_team_id);
+        if (winner_team_id) {
+          console.log(`Winner Team Id:`, winner_team_id);
+        }
         console.log(
           `Game Status:`,
           winner_team_id

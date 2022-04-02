@@ -21,7 +21,14 @@ export const config = {
     battle_point: true, // tiebreak based on BP?
   },
 
-  DELAY_B4_REINFORCEMENT_IN_MIN: 20, // in Minutes i.e delay for x minutes b4 sending a reinforcement
+  DELAY_B4_REINFORCEMENT_IN_MIN: 8, // in Minutes i.e delay for x minutes b4 sending a reinforcement
+
+  /**
+   * GAS CAP IN GWEI
+   * @notice bot will not send a reinforcement, claim or start a game if estimated gas is greater than this value
+   * @notice units are in GWEI e.g 300 GWEI
+   */
+  GAS_CAP: 300,
 
   /**
    * Enviroment

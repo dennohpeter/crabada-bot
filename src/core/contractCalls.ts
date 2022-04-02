@@ -1,4 +1,4 @@
-import { BigNumber, Contract, providers, utils, Wallet } from 'ethers';
+import { BigNumber, Contract, ethers, providers, utils, Wallet } from 'ethers';
 import { config } from '../../config';
 import IdleGameBI from './abis//IdleGame.json';
 
@@ -25,9 +25,13 @@ const idleGameContract = new Contract(
 );
 
 export const startGame = async (gameId: number) => {
+  await _checkGasPrice();
+
   return await idleGameContract.startGame(gameId);
 };
 export const closeGame = async (gameId: number) => {
+  await _checkGasPrice();
+
   return await idleGameContract.closeGame(gameId);
 };
 export const settleGame = async (gameId: number) => {
@@ -56,6 +60,8 @@ export const approveTUS = async () => {
     abi,
     signer
   );
+  await _checkGasPrice();
+
   const approve = await tusContract.approve(
     config.TEST_MODE ? config.IdleGame_TESTNET : config.IdleGame_MAINNET,
     utils.parseUnits(
@@ -71,9 +77,24 @@ export const reinforceDefense = async (
   crabadaId: number,
   borrowPrice: BigNumber | string
 ) => {
+  await _checkGasPrice();
   return await idleGameContract.reinforceDefense(
     gameId,
     crabadaId,
     borrowPrice
   );
+};
+
+const _checkGasPrice = async () => {
+  const gasPrice = await signer.getGasPrice();
+  /// @dev note the error margin of +2 gwei.
+  const errorMargin = 2;
+  const gasPriceInGwei =
+    parseFloat(utils.formatUnits(gasPrice, 'gwei')) + errorMargin;
+  console.log('Current Gas price in gwei: ', gasPriceInGwei);
+  if (gasPriceInGwei >= config.GAS_CAP) {
+    throw new Error(
+      `Gas price of ${gasPriceInGwei} Gwei is greater than gas cap of ${config.GAS_CAP} Gwei. Please try again later or increase the gas cap.`
+    );
+  }
 };
