@@ -207,12 +207,12 @@ const Main = async () => {
                 })
                 .catch((err: any) => {
                   console.log(`-----`.repeat(2));
-                  let message =
-                    JSON.parse(err?.error?.error?.body || {})?.error?.message ||
-                    err;
+                  // let message =
+                  //   JSON.parse(err?.error?.error?.body || {})?.error?.message ||
+                  //   err;
                   console.error(
                     `Error while deploying  mercenary ${best_mercenary.id}  to Mine ${game_id}`,
-                    message
+                    err
                   );
                   //  remove game track list
                   game_manager.delete(game_id);
