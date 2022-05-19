@@ -11,14 +11,17 @@
     "start": "ts-node-dev src/index.ts"
   },
   "dependencies": {
+    "@types/dateformat": "^5.0.0",
     "@types/node": "^17.0.21",
     "@types/node-cron": "^3.0.1",
     "axios": "^0.26.0",
     "chalk-table": "^1.0.2",
-    "dotenv": "^16.0.0",
+    "dateformat": "^4.1.2",
+    "dotenv": "^16.0.1",
     "ethers": "^5.6.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.3",
     "node-cron": "^3.0.0",
+    "telegraf": "^4.8.2",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.6.2"
   }

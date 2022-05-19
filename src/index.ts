@@ -164,13 +164,19 @@ const Main = async () => {
           var in30min = new Date(current_ms + 1000 * 60 * 30);
           ///  send message when my team is attacked
           let messages = messageManages.get(game_id.toString());
-          if (
-            (level.action === 'attack' ||
-              level.action === 'reinforce-attack') &&
-            level.action != messages?.lastKnownAction &&
-            in30min.getTime() > Date.now()
-          ) {
-            message = `Mine ${game_id} is under attack!`;
+          if (level.action != messages?.lastKnownAction) {
+            message = `Mine ${game_id} ${
+              level.action.includes('attack')
+                ? 'is under attack!'
+                : level.action.includes('reinforce-defence')
+                ? 'is under defence!'
+                : level.action.includes('create_game')
+                ? 'was just created at ' +
+                  dateFormat(level.transaction_time * 1000)
+                : level.action.includes('settle')
+                ? 'is settling...'
+                : level.action
+            }`;
             sendMessage(message);
             messageManages.set(game_id.toString(), {
               lastKnownAction: level.action,
