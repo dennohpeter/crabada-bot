@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { Crabada, Mine, Team } from '../types';
-import { config } from '../../config';
+import { config } from '../config';
 
 /**
  * A Wrapper that contains all the necessary functions for interacting
