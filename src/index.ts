@@ -27,7 +27,7 @@ const Main = async () => {
     let teams = await miningWrapper.fetchTeams({
       user_address,
       page: 1,
-      limit: 1000,
+      limit: 300,
       is_team_available: 1,
     });
 
@@ -85,7 +85,7 @@ const Main = async () => {
       user_address,
       status: 'open',
       page: 1,
-      limit: 500,
+      limit: 100,
     });
     if (mines.length) {
       mines.map(async (mine) => {
@@ -156,7 +156,7 @@ const Main = async () => {
               orderBy: 'price',
               order: 'desc',
               page: 1,
-              limit: 1000,
+              limit: 300,
               class_ids: undefined,
               is_origin: undefined,
               origin: undefined,

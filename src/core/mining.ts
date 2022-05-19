@@ -15,9 +15,10 @@ class MiningWrapper {
     this._instance = axios.create({
       baseURL: config.TEST_MODE
         ? `https://idle-game-subnet-test-api.crabada.com/public/idle`
-        : `https://idle-api.crabada.com/public/idle`,
+        : `https://idle-game-api.crabada.com/public/idle`,
     });
   }
+  // https://idle-game-api.crabada.com/public/idle/teams?user_address=0xb5bdf31fd93ad1922a6e9b0a4cf92627e31ff829&limit=300&page=1&is_team_available=1
 
   filterCrabs = async (
     crabadas: Crabada[],
@@ -71,7 +72,6 @@ class MiningWrapper {
   }) => {
     return this._fetch('/mines', params);
   };
-
   /**
    * Fetches lendings from tarven
    * @param params.orderBy - Field to order by
@@ -97,7 +97,6 @@ class MiningWrapper {
   }): Promise<Crabada[]> => {
     return this._fetch('/crabadas/lending', params);
   };
-
   /**
    * Fetches lendings from tarven
    * @param params.orderBy - Field to order by

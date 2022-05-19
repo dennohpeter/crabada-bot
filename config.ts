@@ -41,12 +41,12 @@ export const config = {
   TESTNET_CHAIN_ID: 73771,
   TESTNET_EXPLORER: `https://testnet-explorer.swimmer.network`,
 
-  MAINNET_JSON_RPC_URL: `https://api.avax.network/ext/bc/C/rpc`,
-  MAINNET_CHAIN_ID: 43114,
+  MAINNET_JSON_RPC_URL: `https://rpc.swimmer.network/ext/bc/2K33xS9AyP9oCDiHYKVrHe7F54h2La5D8erpTChaAhdzeSu2RX/rpc`,
+  MAINNET_CHAIN_ID: 73772,
   MAINNET_EXPLORER: `https://snowtrace.io`,
 
   IdleGame_TESTNET: '0x801b5bb19e9052db964b94ed5b4d6730d8fcca25',
-  IdleGame_MAINNET: '0x82a85407BD612f52577909F4A58bfC6873f14DA8',
+  IdleGame_MAINNET: '0x9ab9e81Be39b73de3CCd9408862b1Fc6D2144d2B',
 
   TUS_TESTNET: '',
   TUS_MAINNET: '0xf693248F96Fe03422FEa95aC0aFbBBc4a8FdD172',
