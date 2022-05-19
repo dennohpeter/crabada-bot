@@ -1,5 +1,5 @@
 import { BigNumber, Contract, ethers, providers, utils, Wallet } from 'ethers';
-import { config } from '../../config';
+import { config } from '../config';
 import IdleGameBI from './abis//IdleGame.json';
 
 const provider = new providers.JsonRpcProvider(

@@ -1,10 +1,17 @@
-import { displayTable, formatDate } from './utils';
-import { closeGame, miningWrapper, reinforceDefense, startGame } from './core';
+import { displayTable, formatDate } from './helpers';
+import {
+  closeGame,
+  miningWrapper,
+  reinforceDefense,
+  startGame,
+  sendMessage,
+} from './core';
 import { schedule } from 'node-cron';
 import moment from 'moment';
 import { Process } from './types';
 import { utils } from 'ethers';
-import { config } from '../config';
+import dateFormat from 'dateformat';
+import { config } from './config';
 
 /**
  * Entry point
@@ -12,6 +19,13 @@ import { config } from '../config';
 const Main = async () => {
   const user_address = config.PUBLIC_KEY;
   const CHECK_INTERVAL = 15;
+
+  let message = '';
+
+  message = 'Starting bot at ' + dateFormat(new Date());
+  sendMessage(message);
+
+  let messageManages: Map<string, { lastKnownAction: string }> = new Map();
 
   schedule(`*/${CHECK_INTERVAL * 4} * * * * *`, async () => {
     // 1 Check for free teams
@@ -32,23 +46,34 @@ const Main = async () => {
         const team = game_manager.get(team_id);
         if (!team) {
           console.log(`-----`.repeat(10));
-          console.info(`Found a free team, Team Name: Team ${team_id}  ✔️`);
+          message = `Found a free team, Team Name: Team ${team_id}  ✔️`;
+          console.log(message);
+          sendMessage(message);
           game_manager.set(team_id, {
             team_id,
+            lastKnownAction: '',
           });
           console.log(`-----`.repeat(2));
-          console.info(`Deploying Team ${team_id} to a mining expedition...`);
+          message = `Deploying Team ${team_id} to a mining expedition...`;
+          console.log(message);
+          sendMessage(message);
           await startGame(team_id)
             .then((tx) => {
               const { hash } = tx;
               console.log(`-----`.repeat(2));
-              console.info(`Tx Hash:`, hash);
+              message = `Tx Hash: [${utils.getAddress(hash)}](${
+                config.TEST_MODE
+                  ? config.TESTNET_EXPLORER
+                  : config.MAINNET_EXPLORER
+              }/tx/${hash})`;
+              console.log(message);
+              sendMessage(message);
               if (hash) {
                 console.log(`-----`.repeat(2));
 
-                console.info(
-                  `Team ${team_id} has been deployed successfully ✔️`
-                );
+                message = `Team ${team_id} has been deployed successfully ✔️`;
+                console.log(message);
+                sendMessage(message);
                 console.log(`-----`.repeat(10));
               }
               //  remove game track list
@@ -56,7 +81,9 @@ const Main = async () => {
             })
             .catch((err) => {
               console.log(`-----`.repeat(2));
-              console.error(`Error while deploying Team ${team_id}`, err);
+              message = `Error while deploying Team ${team_id} err: ${err}`;
+              console.error(message);
+              sendMessage(message);
               //  remove game track list
               game_manager.delete(team_id);
               console.log(`-----`.repeat(10));
@@ -101,6 +128,7 @@ const Main = async () => {
         console.log(`Team Id:`, team_id);
         console.log(`Start Time:`, formatDate(mine_start_time));
         console.log(`End Time:`, formatDate(mine_end_time));
+
         if (timeLeft > 0) {
           console.log(`Game Ends:`, moment(mine_end_time * 1_000).fromNow());
         }
@@ -131,6 +159,24 @@ const Main = async () => {
         console.log(`-----`.repeat(10));
 
         if (timeLeft > 0) {
+          var current_ms = new Date(level.transaction_time).getTime();
+          // add 30 minutes to attack time
+          var in30min = new Date(current_ms + 1000 * 60 * 30);
+          ///  send message when my team is attacked
+          let messages = messageManages.get(game_id.toString());
+          if (
+            (level.action === 'attack' ||
+              level.action === 'reinforce-attack') &&
+            level.action != messages?.lastKnownAction &&
+            in30min.getTime() > Date.now()
+          ) {
+            message = `Mine ${game_id} is under attack!`;
+            sendMessage(message);
+            messageManages.set(game_id.toString(), {
+              lastKnownAction: level.action,
+            });
+          }
+
           if (
             (level.action === 'attack' ||
               (level.action === 'reinforce-attack' &&
@@ -142,7 +188,8 @@ const Main = async () => {
                   0
                 ) < 3)) && // FIXED check to ensure that we go upto 2 reinforcements
             Math.floor(Date.now() / 1_000) - level.transaction_time >=
-              config.DELAY_B4_REINFORCEMENT_IN_MIN * 60
+              config.DELAY_B4_REINFORCEMENT_IN_MIN * 60 &&
+            in30min.getTime() > Date.now()
           ) {
             // 5 Get reinforcements from tarven
             const lendings = await miningWrapper.fetchLendings({
@@ -166,19 +213,12 @@ const Main = async () => {
             const game = game_manager.get(game_id);
             if (!game && !best_mercenary.is_being_borrowed) {
               game_manager.set(game_id, {
-                game_id,
+                ...game,
               });
-              console.info(
-                `Sending a reinforcement mercenary ${best_mercenary.crabada_id} to Mine ${game_id}...`
-              );
-              /// TODO Check TUS allowance
-              // const allowance = await checkAllowance();
+              message = `Sending a reinforcement mercenary ${best_mercenary.crabada_id} to Mine ${game_id}...`;
+              console.log(message);
+              sendMessage(message);
 
-              // if (
-              //   allowance.lt(utils.parseUnits(`${best_mercenary.price}`, 0))
-              // ) {
-              //   await approveTUS();
-              // }
               await reinforceDefense(
                 game_id,
                 best_mercenary.crabada_id,
@@ -187,14 +227,20 @@ const Main = async () => {
                 .then((tx) => {
                   const { hash } = tx;
                   console.log(`-----`.repeat(2));
-                  console.info(`Tx Hash:`, hash);
+                  message = `Tx Hash: [${utils.getAddress(hash)}](${
+                    config.TEST_MODE
+                      ? config.TESTNET_EXPLORER
+                      : config.MAINNET_EXPLORER
+                  }/tx/${hash})`;
+                  console.log(message);
+                  sendMessage(message);
                   if (hash) {
                     console.log(`-----`.repeat(2));
                     //  remove game track list
                     game_manager.delete(game_id);
-                    console.info(
-                      `Mercenary ${best_mercenary.id} has been deployed successfully to  Mine ${game_id} ✔️`
-                    );
+                    message = `Mercenary ${best_mercenary.id} has been deployed successfully to  Mine ${game_id} ✔️`;
+                    console.log(message);
+                    sendMessage(message);
                     console.log(`-----`.repeat(10));
                   }
                 })
@@ -203,10 +249,9 @@ const Main = async () => {
                   // let message =
                   //   JSON.parse(err?.error?.error?.body || {})?.error?.message ||
                   //   err;
-                  console.error(
-                    `Error while deploying  mercenary ${best_mercenary.id}  to Mine ${game_id}`,
-                    err
-                  );
+                  message = `Error while deploying  mercenary ${best_mercenary.id}  to Mine ${game_id}, Error: ${err}`;
+                  console.error(message);
+                  sendMessage(message);
                   //  remove game track list
                   game_manager.delete(game_id);
                   console.log(`-----`.repeat(10));
@@ -217,7 +262,9 @@ const Main = async () => {
           // 7: claim rewards and end game
           const mine = game_manager.get(game_id);
           if (!mine) {
-            console.info(`New mine ${game_id} to claim rewards recorded  ✔️`);
+            message = `New mine ${game_id} to claim rewards recorded  ✔️`;
+            console.log(message);
+            sendMessage(message);
             console.log(`-----`.repeat(2));
             game_manager.set(game_id, {
               levels,
@@ -230,14 +277,20 @@ const Main = async () => {
               winner_team_id,
             });
 
-            console.info(
-              `Claiming rewards for Mine ${game_id}, Team ${team_id}`
-            );
+            message = `Claiming rewards for Mine ${game_id}, Team ${team_id}`;
+            console.log(message);
+            sendMessage(message);
             await closeGame(game_id)
               .then((tx: { hash: string }) => {
                 const { hash } = tx;
                 console.log(`-----`.repeat(2));
-                console.info(`Tx Hash:`, hash);
+                message = `Tx Hash: [${utils.getAddress(hash)}](${
+                  config.TEST_MODE
+                    ? config.TESTNET_EXPLORER
+                    : config.MAINNET_EXPLORER
+                }/tx/${hash})`;
+                console.log(message);
+                sendMessage(message);
                 if (hash) {
                   console.log(`-----`.repeat(2));
                 }
@@ -247,7 +300,9 @@ const Main = async () => {
               })
               .catch((err: any) => {
                 console.log(`-----`.repeat(2));
-                console.error(`Error:`, err);
+                message = `Error while closing game, ${err}`;
+                console.error(message);
+                sendMessage(message);
                 //  remove game track list
                 game_manager.delete(game_id);
               });
