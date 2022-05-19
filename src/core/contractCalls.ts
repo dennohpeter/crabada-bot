@@ -7,11 +7,11 @@ const provider = new providers.JsonRpcProvider(
   config.TEST_MODE
     ? {
         chainId: config.TESTNET_CHAIN_ID,
-        name: 'Swimmers Network',
+        name: 'Swimmers Testnet',
       }
     : {
         chainId: config.MAINNET_CHAIN_ID,
-        name: 'Avalanche Mainnet C-Chain',
+        name: 'Swimmer Mainnet',
       }
 );
 
@@ -24,10 +24,10 @@ const idleGameContract = new Contract(
   signer
 );
 
-export const startGame = async (gameId: number) => {
+export const startGame = async (teamId: number) => {
   await _checkGasPrice();
 
-  return await idleGameContract.startGame(gameId);
+  return await idleGameContract.startGame(teamId);
 };
 export const closeGame = async (gameId: number) => {
   await _checkGasPrice();
