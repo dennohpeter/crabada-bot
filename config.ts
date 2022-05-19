@@ -28,7 +28,7 @@ export const config = {
    * @notice bot will not send a reinforcement, claim or start a game if estimated gas is greater than this value
    * @notice units are in GWEI e.g 300 GWEI
    */
-  GAS_CAP: 300,
+  GAS_CAP: 15000,
 
   /**
    * Enviroment
@@ -48,6 +48,6 @@ export const config = {
   IdleGame_TESTNET: '0x801b5bb19e9052db964b94ed5b4d6730d8fcca25',
   IdleGame_MAINNET: '0x9ab9e81Be39b73de3CCd9408862b1Fc6D2144d2B',
 
-  TUS_TESTNET: '',
-  TUS_MAINNET: '0xf693248F96Fe03422FEa95aC0aFbBBc4a8FdD172',
+  // TUS_TESTNET: '',
+  // TUS_MAINNET: '0xf693248F96Fe03422FEa95aC0aFbBBc4a8FdD172',
 };

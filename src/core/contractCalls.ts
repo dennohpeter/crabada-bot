@@ -38,39 +38,39 @@ export const settleGame = async (gameId: number) => {
   return await idleGameContract.settleGame(gameId);
 };
 
-export const checkAllowance = async () => {
-  const abi = ['function allowance(address,address) view returns (uint256)'];
-  const tusContract = new Contract(
-    config.TEST_MODE ? config.TUS_TESTNET : config.TUS_MAINNET,
-    abi,
-    signer
-  );
-  const allowance = await tusContract.allowance(
-    await signer.getAddress(),
-    config.TEST_MODE ? config.IdleGame_TESTNET : config.IdleGame_MAINNET
-  );
-  return allowance;
-};
+// export const checkAllowance = async () => {
+//   const abi = ['function allowance(address,address) view returns (uint256)'];
+//   const tusContract = new Contract(
+//     config.TEST_MODE ? config.TUS_TESTNET : config.TUS_MAINNET,
+//     abi,
+//     signer
+//   );
+//   const allowance = await tusContract.allowance(
+//     await signer.getAddress(),
+//     config.TEST_MODE ? config.IdleGame_TESTNET : config.IdleGame_MAINNET
+//   );
+//   return allowance;
+// };
 
-export const approveTUS = async () => {
-  console.log('approving IdleGame contract.....');
-  const abi = ['function approve(address,uint256) returns (bool)'];
-  const tusContract = new Contract(
-    config.TEST_MODE ? config.TUS_TESTNET : config.TUS_MAINNET,
-    abi,
-    signer
-  );
-  await _checkGasPrice();
+// export const approveTUS = async () => {
+//   console.log('approving IdleGame contract.....');
+//   const abi = ['function approve(address,uint256) returns (bool)'];
+//   const tusContract = new Contract(
+//     config.TEST_MODE ? config.TUS_TESTNET : config.TUS_MAINNET,
+//     abi,
+//     signer
+//   );
+//   await _checkGasPrice();
 
-  const approve = await tusContract.approve(
-    config.TEST_MODE ? config.IdleGame_TESTNET : config.IdleGame_MAINNET,
-    utils.parseUnits(
-      '57896044618658097711785492504343953926634992332820282019728792003956564819968',
-      0
-    )
-  );
-  return approve;
-};
+//   const approve = await tusContract.approve(
+//     config.TEST_MODE ? config.IdleGame_TESTNET : config.IdleGame_MAINNET,
+//     utils.parseUnits(
+//       '57896044618658097711785492504343953926634992332820282019728792003956564819968',
+//       0
+//     )
+//   );
+//   return approve;
+// };
 
 export const reinforceDefense = async (
   gameId: number,

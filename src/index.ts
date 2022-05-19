@@ -1,12 +1,5 @@
 import { displayTable, formatDate } from './utils';
-import {
-  approveTUS,
-  checkAllowance,
-  closeGame,
-  miningWrapper,
-  reinforceDefense,
-  startGame,
-} from './core';
+import { closeGame, miningWrapper, reinforceDefense, startGame } from './core';
 import { schedule } from 'node-cron';
 import moment from 'moment';
 import { Process } from './types';
@@ -156,7 +149,7 @@ const Main = async () => {
               orderBy: 'price',
               order: 'desc',
               page: 1,
-              limit: 300,
+              limit: 100,
               class_ids: undefined,
               is_origin: undefined,
               origin: undefined,
@@ -179,13 +172,13 @@ const Main = async () => {
                 `Sending a reinforcement mercenary ${best_mercenary.crabada_id} to Mine ${game_id}...`
               );
               /// TODO Check TUS allowance
-              const allowance = await checkAllowance();
+              // const allowance = await checkAllowance();
 
-              if (
-                allowance.lt(utils.parseUnits(`${best_mercenary.price}`, 0))
-              ) {
-                await approveTUS();
-              }
+              // if (
+              //   allowance.lt(utils.parseUnits(`${best_mercenary.price}`, 0))
+              // ) {
+              //   await approveTUS();
+              // }
               await reinforceDefense(
                 game_id,
                 best_mercenary.crabada_id,
