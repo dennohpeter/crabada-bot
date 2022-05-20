@@ -1,6 +1,6 @@
 import { BigNumber, Contract, ethers, providers, utils, Wallet } from 'ethers';
 import { config } from '../config';
-import IdleGameBI from './abis//IdleGame.json';
+import IdleGameBI from './abis/IdleGame.json';
 
 const provider = new providers.JsonRpcProvider(
   config.TEST_MODE ? config.TESTNET_JSON_RPC_URL : config.MAINNET_JSON_RPC_URL,

@@ -46,7 +46,7 @@ const Main = async () => {
         const team = game_manager.get(team_id);
         if (!team) {
           console.log(`-----`.repeat(10));
-          message = `Found a free team, Team Name: Team ${team_id}  ✔️`;
+          message = `Found a free team, Team ${team_id}  ✔️`;
           console.log(message);
           sendMessage(message);
           game_manager.set(team_id, {
@@ -170,7 +170,7 @@ const Main = async () => {
                 ? 'is under attack!'
                 : level.action.includes('reinforce-defence')
                 ? 'is under defence!'
-                : level.action.includes('create_game')
+                : level.action.includes('create-game')
                 ? 'was just created at ' +
                   dateFormat(level.transaction_time * 1000)
                 : level.action.includes('settle')
