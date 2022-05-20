@@ -206,4 +206,4 @@ class MiningWrapper {
   };
 }
 
-export const miningWrapper = new MiningWrapper();
+export const api = new MiningWrapper();

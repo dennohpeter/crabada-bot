@@ -5,7 +5,7 @@ import {
   reinforceDefense,
   startGame,
   sendMessage,
-} from './core';
+} from './integration';
 import { schedule } from 'node-cron';
 import moment from 'moment';
 import { Process } from './types';

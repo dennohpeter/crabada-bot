@@ -27,7 +27,7 @@ export const config = {
     battle_point: true, // tiebreak based on BP?
   },
 
-  DELAY_B4_REINFORCEMENT_IN_MIN: 20, // in Minutes i.e delay for x minutes b4 sending a reinforcement
+  DELAY_B4_REINFORCEMENT_IN_MIN: 10, // in Minutes i.e delay for x minutes b4 sending a reinforcement
 
   /**
    * GAS CAP IN GWEI
@@ -35,6 +35,13 @@ export const config = {
    * @notice units are in GWEI e.g 300 GWEI
    */
   GAS_CAP: 15000,
+
+  /**
+   * Game Check Interval in seconds
+   * @notice bot will check for mines/free every x seconds
+   * @notice units are in seconds e.g 59 seconds
+   */
+  CHECK_INTERVAL: 45,
 
   /**
    * Enviroment
