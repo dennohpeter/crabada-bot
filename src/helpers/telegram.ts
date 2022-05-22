@@ -3,6 +3,7 @@ export const normalizeMessage = (message: string) => {
     .replaceAll('_', '\\_')
     .replaceAll('|', '\\|')
     .replaceAll('.', '\\.')
+    .replaceAll(':', '\\:')
     .replaceAll('{', '\\{')
     .replaceAll('}', '\\}')
     .replaceAll('=', '\\=')
