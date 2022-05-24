@@ -27,7 +27,7 @@ export const config = {
     battle_point: true, // tiebreak based on BP?
   },
 
-  DELAY_B4_REINFORCEMENT_IN_MIN: 10, // in Minutes i.e delay for x minutes b4 sending a reinforcement
+  REINFORCEMENT_DELAY_IN_MIN: 5, // in Minutes i.e delay for x minutes b4 sending a reinforcement
 
   /**
    * GAS CAP IN GWEI

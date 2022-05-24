@@ -10,5 +10,5 @@ import { TEAM_ROLE } from '../types';
  */
 export const TeamConfig: Record<number, TEAM_ROLE> = {
   28625: TEAM_ROLE.MINE,
-  30631: TEAM_ROLE.LOOT,
+  30631: TEAM_ROLE.MINE,
 };

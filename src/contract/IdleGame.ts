@@ -58,10 +58,20 @@ class IdleGame {
   reinforceDefense = async (
     gameId: number,
     crabadaId: number,
-    borrowPrice: BigNumber | string
+    borrowPrice: BigNumber
   ) => {
     await this._checkGasPrice();
-    return await this.contract.reinforceDefense(gameId, crabadaId, borrowPrice);
+    console.log({
+      borrowPrice,
+    });
+    return await this.contract.reinforceDefense(
+      gameId,
+      crabadaId,
+      borrowPrice,
+      {
+        value: borrowPrice,
+      }
+    );
   };
 
   /**

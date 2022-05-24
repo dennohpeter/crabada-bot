@@ -12,4 +12,6 @@ export const normalizeMessage = (message: string) => {
     .replaceAll('<', '\\<')
     .replaceAll('-', '\\-')
     .replaceAll('!', '\\!');
+  // .replaceAll(')', '\\)')
+  // .replaceAll('(', '\\(');
 };
