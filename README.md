@@ -1,6 +1,6 @@
-# Crabada Mining Bot
+#### Crabada Mining Bot
 
-# INSTALL
+#### INSTALL
 
 1. Open a terminal or commandline and `git clone git@github.com:JoshuaGX/carbada_mining_bot.git`
 2. change directory to `crabada_mining_bot` in your terminal
@@ -11,7 +11,7 @@
 
    NB: if you have not installed yarn, install deps by running `npm install instead`
 
-# SETUP
+#### SETUP
 
 1. Rename `.env.example` to `.env`
 2. Open .env and set your wallet public key and private key
