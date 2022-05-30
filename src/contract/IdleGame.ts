@@ -75,6 +75,27 @@ class IdleGame {
   };
 
   /**
+   * Reinforce a team that is mining when attacked
+   * @param gameId - The gameId of the game
+   * @param crabadaId - The crabadaId of the game
+   * @param borrowPrice - The hire price of the mercenary
+   * @returns
+   */
+  reinforceAttack = async (
+    gameId: number,
+    crabadaId: number,
+    borrowPrice: BigNumber
+  ) => {
+    await this._checkGasPrice();
+    console.log({
+      borrowPrice,
+    });
+    return await this.contract.reinforceAttack(gameId, crabadaId, borrowPrice, {
+      value: borrowPrice,
+    });
+  };
+
+  /**
    * Used to estimate gas cost for a transaction
    */
   _checkGasPrice = async () => {

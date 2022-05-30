@@ -10,11 +10,14 @@ import { displayRemainingTime, displayTable, formatDate } from '../helpers';
 class GameWrapper {
   private readonly teamManager: Map<number, Team>;
   private readonly mineManager: Map<number, Mine>;
+  private readonly teamStatus: Map<number, string>;
   private logs: string;
   private explorerUrl: string;
   constructor() {
     this.teamManager = new Map();
     this.mineManager = new Map();
+    this.teamStatus = new Map();
+
     this.logs = '';
     this.explorerUrl = config.TEST_MODE
       ? config.TESTNET_EXPLORER
@@ -32,7 +35,7 @@ class GameWrapper {
         const teams = await api.fetchTeams({
           user_address: config.PUBLIC_KEY,
           page: 1,
-          limit: 300,
+          limit: 8,
           is_team_available: 1,
         });
         if (teams.length > 0) {
@@ -73,7 +76,7 @@ class GameWrapper {
           user_address: config.PUBLIC_KEY,
           status: 'open',
           page: 1,
-          limit: 100,
+          limit: 8,
         });
 
         if (mines.length > 0) {
@@ -91,7 +94,7 @@ class GameWrapper {
           looter_address: config.PUBLIC_KEY,
           status: 'open',
           page: 1,
-          limit: 100,
+          limit: 8,
         });
 
         if (loots.length > 0) {
@@ -210,26 +213,12 @@ class GameWrapper {
     );
     console.log(`-----`.repeat(10));
 
-    if (this.mineManager.has(game_id)) {
-      let _mine = this.mineManager.get(game_id);
-      if (_mine?.status !== mine.status) {
-        this.logs = `Mine ${game_id} ${
-          level.action.includes('attack')
-            ? 'is under attack!'
-            : level.action.includes('reinforce-defence')
-            ? 'is under defence!'
-            : level.action.includes('create-game')
-            ? 'was just created at ' + formatDate(level.transaction_time * 1000)
-            : level.action.includes('settle')
-            ? 'is settling...'
-            : level.action
-        }`;
+    let _mine = this.teamStatus.get(game_id);
+    if (_mine !== level.action) {
+      this.logs = `Mine ${game_id} ${this._getStatus(level)}`;
 
-        sendMessage(this.logs);
-        this.mineManager.set(game_id, mine);
-      }
-    } else {
-      this.mineManager.set(game_id!, mine);
+      sendMessage(this.logs);
+      this.teamStatus.set(game_id, level.action);
     }
 
     timeLeftInSec > 0
@@ -246,12 +235,16 @@ class GameWrapper {
             ? (acc += 1)
             : acc,
         0
-      ) < 3 && // we have sent less than 3 reinforcements
+      ) <= 2 && // we have sent less than 3 reinforcements
       this._delayBeforeReinforcementIsOver(level.transaction_time) && // delay before we reinforce is over
-      this._notTooLate(level.transaction_time) // we are not late
+      this._notTooLate(level.transaction_time) && // we are not late
+      !this.mineManager.has(mine.game_id) // we have not sent a reinforcement yet
     ) {
+      this.mineManager.set(mine.game_id, mine);
       console.log(`-----`.repeat(2));
-      console.info(`Sending reinforcement...`);
+      this.logs = `Sending reinforcement to mine ${mine.game_id}...`;
+      console.log(this.logs);
+      sendMessage(this.logs);
       console.log(`-----`.repeat(2));
       await this._sendReinforcement(mine);
     }
@@ -259,18 +252,9 @@ class GameWrapper {
 
   private _sendReinforcement = async (mine: Mine) => {
     // Get reinforcements from tarven
-    const lendings = await api.fetchLendings({
-      orderBy: 'price',
-      order: 'asc',
-      page: 1,
-      limit: 100,
-      class_ids: undefined,
-      is_origin: undefined,
-      origin: undefined,
-    });
     // Select the best reinforcement according to the user filter criteria
-    let bestMercenaries = await api.getBestMercenary(lendings, {
-      bp: Math.abs(mine.defense_point - mine.attack_point),
+    let bestMercenaries = await api.getBestMercenary({
+      batte_point: Math.abs(mine.defense_point - mine.attack_point),
     });
     displayTable(bestMercenaries);
     // filter out the one being borrowed
@@ -306,6 +290,7 @@ class GameWrapper {
           sendMessage(this.logs);
           console.log(`-----`.repeat(10));
         }
+        this.mineManager.delete(mine.game_id);
       })
       .catch((err) => {
         console.log(`-----`.repeat(2));
@@ -323,7 +308,8 @@ class GameWrapper {
         } catch (e) {
           msg = err;
         }
-        this.logs = `Error while sending reinforcement to mine ${mine.game_id}`;
+        this.mineManager.delete(mine.game_id);
+        this.logs = `Error while sending reinforcement to mine \`${mine.game_id}\``;
         this.logs += `\nReason: ${msg}`;
         console.error(this.logs);
         sendMessage(this.logs);
@@ -331,9 +317,84 @@ class GameWrapper {
         console.log(`-----`.repeat(10));
       });
   };
-  private _delayBeforeReinforcementIsOver = (transaction_time: number) => {
+
+  private _reinforceAttack = async (mine: Mine) => {
+    // Select the best reinforcement according to the user filter criteria
+    let bestMercenaries = await api.getBestMercenary({
+      batte_point: Math.abs(mine.defense_point - mine.attack_point),
+    });
+    displayTable(bestMercenaries);
+    // filter out the one being borrowed
+    bestMercenaries = bestMercenaries.filter(
+      (mercenary) => !mercenary.is_being_borrowed
+    );
+
+    const [bestMercenary, ...rest] = bestMercenaries;
+
+    this.logs = `Best mercenary found`;
+    this.logs += `\nCrabada: \`${bestMercenary.crabada_id}\``;
+    this.logs += `\nPrice: \`${utils.formatEther(
+      `${bestMercenary.price}`
+    )} TUS\``;
+    this.logs += `\nClass: \`${bestMercenary.class_name}\``;
+    this.logs += `\nBattle Point: \`${bestMercenary.battle_point} BP\``;
+    this.logs += `\nMine Point: \`${bestMercenary.mine_point} MP\``;
+    sendMessage(this.logs);
+
+    gameContract
+      .reinforceAttack(
+        mine.game_id,
+        bestMercenary.crabada_id,
+        utils.parseUnits(`${bestMercenary.price}`, 0)
+      )
+      .then((tx: { hash: string }) => {
+        if (tx?.hash) {
+          console.log(`-----`.repeat(2));
+          this.logs = `Reinforcement sent to looting \`${mine.game_id}\``;
+          this.logs += `\nHash: [${tx.hash.toUpperCase()}](${
+            this.explorerUrl
+          }/tx/${tx.hash})`;
+          sendMessage(this.logs);
+          console.log(`-----`.repeat(10));
+        }
+        this.mineManager.delete(mine.game_id);
+      })
+      .catch((err) => {
+        console.log(`-----`.repeat(2));
+        let msg = '';
+        try {
+          try {
+            let error = JSON.parse(JSON.stringify(err));
+            console.log({
+              error,
+            });
+            msg = error.reason || JSON.parse(error?.body).error?.message || err;
+          } catch (e) {
+            msg = err;
+          }
+        } catch (e) {
+          msg = err;
+        }
+        this.mineManager.delete(mine.game_id);
+        this.logs = `Error while sending reinforcement to looting ${mine.game_id}`;
+        this.logs += `\nReason: ${msg}`;
+        console.error(this.logs);
+        sendMessage(this.logs);
+        //  remove mine from track list
+        console.log(`-----`.repeat(10));
+      });
+  };
+  private _delayBeforeReinforcementIsOver = (
+    transaction_time: number,
+    isLoot = false
+  ) => {
     const timeElapsedInSec = Math.floor(Date.now() / 1_000) - transaction_time;
-    return timeElapsedInSec > config.REINFORCEMENT_DELAY_IN_MIN * 60;
+    return (
+      timeElapsedInSec >
+      (isLoot
+        ? config.LOOT_REINFORCEMENT_DELAY_IN_MIN
+        : config.MINE_REINFORCEMENT_DELAY_IN_MIN * 60)
+    );
   };
 
   private _notTooLate = (transaction_time: number) => {
@@ -403,7 +464,7 @@ class GameWrapper {
 
     console.log(`-----`.repeat(10));
     const level = levels[levels.length - 1];
-    const timeLeftInSec = end_time - Math.floor(Date.now() / 1_000);
+    const timeLeftInSec = start_time + 3600 - Math.floor(Date.now() / 1_000);
 
     console.log(`Looting ID:`, game_id);
     console.log(`Team ID`, team_id);
@@ -439,27 +500,12 @@ class GameWrapper {
         : 'Ended'
     );
     console.log(`-----`.repeat(10));
+    let _mine = this.teamStatus.get(game_id);
+    if (_mine !== level.action) {
+      this.logs = `Looting ${game_id} ${this._getStatus(level)}`;
 
-    if (this.mineManager.has(game_id)) {
-      let _mine = this.mineManager.get(game_id);
-      if (_mine?.status !== loot.status) {
-        this.logs = `Looting ${game_id} ${
-          level.action.includes('attack')
-            ? 'is under attack!'
-            : level.action.includes('reinforce-defence')
-            ? 'is under defence!'
-            : level.action.includes('create-game')
-            ? 'was just created at ' + formatDate(level.transaction_time * 1000)
-            : level.action.includes('settle')
-            ? 'is settling...'
-            : level.action
-        }`;
-
-        sendMessage(this.logs);
-        this.mineManager.set(game_id, loot);
-      }
-    } else {
-      this.mineManager.set(game_id!, loot);
+      sendMessage(this.logs);
+      this.teamStatus.set(game_id, level.action);
     }
 
     timeLeftInSec > 0
@@ -469,16 +515,25 @@ class GameWrapper {
 
   private _checkLootingStatus = async (mine: Mine, level: Process) => {
     // check if the miner has reinforced
-    console.log({
-      _checkLootingStatus: '_checkLootingStatus',
-      mine,
-      level: level.action,
-    });
-    if (['reinforce-defense'].includes(level.action)) {
+    if (
+      ['reinforce-defense'].includes(level.action) && // miner has reinforced
+      mine.process.reduce(
+        (acc, l2) =>
+          l2.action == 'reinforce-defence' // and the miner has reinforced
+            ? (acc += 1)
+            : acc,
+        0
+      ) <= 2 &&
+      this._delayBeforeReinforcementIsOver(level.transaction_time, true) && // delay before we reinforce is over
+      this._notTooLate(level.transaction_time) && // we are not late
+      !this.mineManager.has(mine.game_id) // we have not sent a reinforcement yet
+    ) {
       console.log(`-----`.repeat(2));
-      console.info(`Sending reinforcement...`);
+      this.logs = `Sending reinforcement to looting \`${mine.game_id}\`...`;
+      console.log(this.logs);
+      sendMessage(this.logs);
       console.log(`-----`.repeat(2));
-      await this._sendReinforcement(mine);
+      await this._reinforceAttack(mine);
     }
   };
   private _endLooting = (mine: Mine) => {
@@ -521,6 +576,22 @@ class GameWrapper {
         sendMessage(this.logs);
         console.log(`-----`.repeat(10));
       });
+  };
+
+  private _getStatus = (level: Process) => {
+    return `${
+      level.action.includes('reinforce-attack')
+        ? 'is  under reinforce attack!'
+        : level.action.includes('reinforce-defense')
+        ? 'is  under reinforce defense!'
+        : level.action.includes('attack')
+        ? 'is  under attack!'
+        : level.action.includes('create-game')
+        ? 'was just created at ' + formatDate(level.transaction_time * 1000)
+        : level.action.includes('settle')
+        ? 'is settling...'
+        : level.action
+    }`;
   };
 }
 

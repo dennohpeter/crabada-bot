@@ -134,7 +134,15 @@ class APIWrapper {
   }): Promise<Mine[]> => {
     return this._fetch('/mines', _params);
   };
-  getBestMercenary = async (lendings: Crabada[], filters?: any) => {
+  getBestMercenary = async (filters?: any) => {
+    // Get reinforcements from tarven
+    const lendings = await this.fetchLendings({
+      orderBy: 'price',
+      order: 'asc',
+      page: 1,
+      limit: 50,
+    });
+
     const max_price = config.filters.maxPrice * Math.pow(10, 18);
     const min_price = config.filters.minPrice * Math.pow(10, 18);
 
@@ -144,20 +152,20 @@ class APIWrapper {
       min_price,
     });
     let matches = lendings.filter((lending) => {
+      let batte_point = filters.batte_point >= 235 ? 235 : filters.batte_point;
       return (
         lending.price >= min_price &&
         lending.price <= max_price &&
-        lending.battle_point > filters.bp
+        lending.battle_point >= batte_point
       );
     });
 
     // sort crabadas matches by mine_point(mp) and batte_point(bp) in descending order i.e
     // from highest to lowest
     matches = matches.sort(
-      (l1, l2) =>
-        l2.battle_point - l1.battle_point ||
-        l1.price - l2.price ||
-        l2.mine_point - l1.mine_point
+      (l1, l2) => l2.battle_point - l1.battle_point || l1.price - l2.price
+      //  ||
+      // l2.mine_point - l1.mine_point
     );
     // console.log({
     //   size: matches.length,
@@ -202,9 +210,10 @@ class APIWrapper {
 
         if (!data?.error_code) {
           let { data: record, totalRecord, totalPages, page } = data?.result;
+
           records = records.concat(record);
 
-          if (totalPages == page) {
+          if (totalPages == page || records.length > 200) {
             break;
           }
           currentPage += 1;
@@ -214,10 +223,11 @@ class APIWrapper {
           break;
         }
       } catch (error: any) {
-        console.error(`Error:`, error);
+        let message = JSON.parse(JSON.stringify(error));
+        console.error(`Error:`, message);
+        console.error(`Error:`, message.message, message.url);
         // throw new Error(error);
       }
-      sleep(1000);
     }
     records = records.filter(Boolean);
     // console.log({
