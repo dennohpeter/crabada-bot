@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dateFormat from 'dateformat';
 
 /**
  * Formats a timestamp  to human readable format
@@ -7,8 +7,8 @@ import moment from 'moment';
  * @returns human readable version of the timestamp
  */
 export const formatDate = (
-  timestamp_in_seconds: number | number,
-  pattern = `YYYY-MM-DD HH:mm:ss`
+  timeStamp: number,
+  pattern = `yyyy-mm-dd HH:MM:ss TT`
 ) => {
-  return moment(timestamp_in_seconds * 1_000).format(pattern);
+  return dateFormat(timeStamp, pattern);
 };
