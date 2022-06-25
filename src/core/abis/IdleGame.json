@@ -1,0 +1,1083 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "position",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "crabadaId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "battlePoint",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timePoint",
+        "type": "uint256"
+      }
+    ],
+    "name": "AddCrabada",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      }
+    ],
+    "name": "CloseGame",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "crabadaId1",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "crabadaId2",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "crabadaId3",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "battlePoint",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timePoint",
+        "type": "uint256"
+      }
+    ],
+    "name": "CreateTeam",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "crabadaId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "Deposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newTeamAmountLimit",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "cost",
+        "type": "uint256"
+      }
+    ],
+    "name": "ExpandTeam",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "turn",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "attackTeamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "defenseTeamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "soldierId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "attackTime",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "attackPoint",
+        "type": "uint16"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "defensePoint",
+        "type": "uint16"
+      }
+    ],
+    "name": "Fight",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "borrower",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "crabadaId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "Lend",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Paused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "position",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "crabadaId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "battlePoint",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timePoint",
+        "type": "uint256"
+      }
+    ],
+    "name": "RemoveCrabada",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "crabadaId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetLendingPrice",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "winnerTeamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "winnerCraReward",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "winnerTusReward",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "loserCraReward",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "loserTusReward",
+        "type": "uint256"
+      }
+    ],
+    "name": "SettleGame",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "duration",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "craReward",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tusReward",
+        "type": "uint256"
+      }
+    ],
+    "name": "StartGame",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Unpaused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "battlePoint",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timePoint",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "statVersion",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateStatTeam",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "crabadaId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "Withdraw",
+    "type": "event"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "expandTeamCounts",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "paused",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "teamCounts",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "newOwner", "type": "address" }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  { "stateMutability": "payable", "type": "receive" },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ICrabada",
+        "name": "_crabada",
+        "type": "address"
+      },
+      { "internalType": "contract IToken", "name": "_cra", "type": "address" },
+      { "internalType": "contract IToken", "name": "_tus", "type": "address" },
+      {
+        "internalType": "contract IGameStat",
+        "name": "_gameStat",
+        "type": "address"
+      },
+      { "internalType": "address", "name": "_owner", "type": "address" }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256[]", "name": "crabadaIds", "type": "uint256[]" }
+    ],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256[]", "name": "crabadaIds", "type": "uint256[]" }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "crabadaId", "type": "uint256" },
+      { "internalType": "uint256", "name": "price", "type": "uint256" }
+    ],
+    "name": "setLendingPrice",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "crabadaId1", "type": "uint256" },
+      { "internalType": "uint256", "name": "crabadaId2", "type": "uint256" },
+      { "internalType": "uint256", "name": "crabadaId3", "type": "uint256" }
+    ],
+    "name": "createTeam",
+    "outputs": [
+      { "internalType": "uint256", "name": "teamId", "type": "uint256" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "teamId", "type": "uint256" },
+      { "internalType": "uint256", "name": "position", "type": "uint256" },
+      { "internalType": "uint256", "name": "crabadaId", "type": "uint256" }
+    ],
+    "name": "addCrabadaToTeam",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "teamId", "type": "uint256" },
+      { "internalType": "uint256", "name": "position", "type": "uint256" }
+    ],
+    "name": "removeCrabadaFromTeam",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "teamId", "type": "uint256" }
+    ],
+    "name": "startGame",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "gameId", "type": "uint256" },
+      { "internalType": "uint256", "name": "attackTeamId", "type": "uint256" },
+      { "internalType": "uint256", "name": "expiredTime", "type": "uint256" },
+      { "internalType": "bytes", "name": "signature", "type": "bytes" }
+    ],
+    "name": "attack",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "gameId", "type": "uint256" },
+      { "internalType": "uint256", "name": "crabadaId", "type": "uint256" },
+      { "internalType": "uint256", "name": "borrowPrice", "type": "uint256" }
+    ],
+    "name": "reinforceAttack",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "gameId", "type": "uint256" },
+      { "internalType": "uint256", "name": "crabadaId", "type": "uint256" },
+      { "internalType": "uint256", "name": "borrowPrice", "type": "uint256" }
+    ],
+    "name": "reinforceDefense",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "gameId", "type": "uint256" }
+    ],
+    "name": "settleGame",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "gameId", "type": "uint256" }
+    ],
+    "name": "closeGame",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "operator", "type": "address" },
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "bytes", "name": "data", "type": "bytes" }
+    ],
+    "name": "onERC721Received",
+    "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "teamId", "type": "uint256" }
+    ],
+    "name": "getTeamInfo",
+    "outputs": [
+      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "uint256", "name": "crabadaId1", "type": "uint256" },
+      { "internalType": "uint256", "name": "crabadaId2", "type": "uint256" },
+      { "internalType": "uint256", "name": "crabadaId3", "type": "uint256" },
+      { "internalType": "uint16", "name": "battlePoint", "type": "uint16" },
+      { "internalType": "uint16", "name": "timePoint", "type": "uint16" },
+      { "internalType": "uint256", "name": "currentGameId", "type": "uint256" },
+      { "internalType": "uint128", "name": "lockTo", "type": "uint128" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "gameId", "type": "uint256" }
+    ],
+    "name": "getGameBasicInfo",
+    "outputs": [
+      { "internalType": "uint256", "name": "teamId", "type": "uint256" },
+      { "internalType": "uint128", "name": "craReward", "type": "uint128" },
+      { "internalType": "uint128", "name": "tusReward", "type": "uint128" },
+      { "internalType": "uint32", "name": "startTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "duration", "type": "uint32" },
+      { "internalType": "uint32", "name": "status", "type": "uint32" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "gameId", "type": "uint256" }
+    ],
+    "name": "getGameBattleInfo",
+    "outputs": [
+      { "internalType": "uint256", "name": "attackTeamId", "type": "uint256" },
+      { "internalType": "uint32", "name": "attackTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "lastAttackTime", "type": "uint32" },
+      { "internalType": "uint32", "name": "lastDefTime", "type": "uint32" },
+      { "internalType": "uint256", "name": "attackId1", "type": "uint256" },
+      { "internalType": "uint256", "name": "attackId2", "type": "uint256" },
+      { "internalType": "uint256", "name": "defId1", "type": "uint256" },
+      { "internalType": "uint256", "name": "defId2", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "gameId", "type": "uint256" }
+    ],
+    "name": "getLootingStatsInfo",
+    "outputs": [
+      { "internalType": "uint16", "name": "attackBP", "type": "uint16" },
+      { "internalType": "uint16", "name": "attackMP", "type": "uint16" },
+      { "internalType": "uint16", "name": "defenseBP", "type": "uint16" },
+      { "internalType": "uint16", "name": "defenseMP", "type": "uint16" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "miningCraRewardAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "miningTusRewardAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "lootingCraRewardAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "lootingTusRewardAmount",
+        "type": "uint128"
+      }
+    ],
+    "name": "setReward",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRewardSettings",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "miningCraRewardAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "miningTusRewardAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "lootingCraRewardAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "lootingTusRewardAmount",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "lootingRewardPercent",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "classBonusReward",
+        "type": "uint128"
+      }
+    ],
+    "name": "setPercents",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPercentSettings",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "lootingRewardPercent",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "classBonusReward",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "setGameDuration",
+    "outputs": [
+      { "internalType": "uint128", "name": "stepDuration", "type": "uint128" },
+      {
+        "internalType": "uint128",
+        "name": "miningCoolDown",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "lootingCoolDown",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "dangerousDurationOfMine",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "fromInventoryCoolDown",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint128", "name": "stepDuration", "type": "uint128" },
+      {
+        "internalType": "uint128",
+        "name": "miningCoolDown",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "lootingCoolDown",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "dangerousDurationOfMine",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "fromInventoryCoolDown",
+        "type": "uint128"
+      }
+    ],
+    "name": "setGameDuration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bool", "name": "isEnable", "type": "bool" }],
+    "name": "setCRAIncentiveStatus",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "classId", "type": "uint256" },
+      { "internalType": "bool", "name": "isBonused", "type": "bool" }
+    ],
+    "name": "setBonusClass",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "classId", "type": "uint256" }
+    ],
+    "name": "getBonusRewardClass",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint128", "name": "newThreshold", "type": "uint128" },
+      { "internalType": "uint128", "name": "duration", "type": "uint128" }
+    ],
+    "name": "setBonusTimePointSettings",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBonusTimePointSettings",
+    "outputs": [
+      { "internalType": "uint128", "name": "threshold", "type": "uint128" },
+      { "internalType": "uint128", "name": "duration", "type": "uint128" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bool", "name": "isPaused", "type": "bool" }],
+    "name": "setPause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IToken",
+        "name": "_tusToken",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IToken",
+        "name": "_craToken",
+        "type": "address"
+      },
+      {
+        "internalType": "contract ICrabada",
+        "name": "_crabada",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IGameStat",
+        "name": "_gameStatContract",
+        "type": "address"
+      }
+    ],
+    "name": "changeContractAddresses",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getContractAddresses",
+    "outputs": [
+      { "internalType": "address", "name": "tusAddr", "type": "address" },
+      { "internalType": "address", "name": "craAddr", "type": "address" },
+      { "internalType": "address", "name": "crabadaAddr", "type": "address" },
+      { "internalType": "address", "name": "statAddress", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IRNG",
+        "name": "_rngAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setRNGContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "expandTeamLimit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "playerAddrs",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "amountOfTeams",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "expandTeamLimitForPlayers",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "amuletAddress", "type": "address" },
+      { "internalType": "uint256", "name": "price", "type": "uint256" }
+    ],
+    "name": "setupTeamExpandSetting",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getExpandTeamLimitSettings",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "amuletContract",
+        "type": "address"
+      },
+      { "internalType": "uint256", "name": "price", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_battleResultCalculator",
+        "type": "address"
+      }
+    ],
+    "name": "setBattleResultCalculator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBattleResultCalculator",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ICrabData",
+        "name": "_crabDataContract",
+        "type": "address"
+      }
+    ],
+    "name": "setCrabData",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCrabData",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

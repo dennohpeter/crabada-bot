@@ -21,7 +21,7 @@ export const config = {
    * Reinforcement Filters
    */
   filters: {
-    maxPrice: 20, // max price in TUS
+    maxPrice: 2.98000, // max price in TUS
     minPrice: 0, // min price in TUS
     mine_point: true, //sort by highest MP?
     battle_point: true, // tiebreak based on BP?
@@ -71,5 +71,5 @@ export const config = {
    * List of the whitelisted users.
    * Users who can receive messages/notifications from the bot.
    */
-  WHITELISTED_USERS: ['251669027'],
+  WHITELISTED_USERS: ['5035419034'],
 };
