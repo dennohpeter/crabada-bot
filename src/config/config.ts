@@ -21,7 +21,7 @@ export const config = {
    * Reinforcement Filters
    */
   filters: {
-    maxPrice: 2.98000, // max price in TUS
+    maxPrice: 2.98, // max price in TUS
     minPrice: 0, // min price in TUS
     mine_point: true, //sort by highest MP?
     battle_point: true, // tiebreak based on BP?
